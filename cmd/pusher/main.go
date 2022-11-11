@@ -43,7 +43,7 @@ func main() {
 	}
 
 	// Initialise the Grafana API client.
-	grafanaClient := grafana.NewClient(cfg.Grafana.BaseURL, cfg.Grafana.APIKey, cfg.Grafana.Username, cfg.Grafana.Password)
+	grafanaClient := grafana.NewClient(cfg.Grafana.BaseURL, cfg.Grafana.APIKey, cfg.Grafana.Username, cfg.Grafana.Password, cfg.Grafana.SkipVerify)
 
 	if *pushAll {
 		syncPath := puller.SyncPath(cfg)

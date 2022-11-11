@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"crypto/tls"
 
 	"github.com/sirupsen/logrus"
 )
@@ -18,15 +19,20 @@ type Client struct {
 	APIKey     string
 	Username   string
 	Password   string
+	SkipVerify bool
 	httpClient *http.Client
 }
 
 // NewClient returns a new Grafana API client from a given base URL and API key.
-func NewClient(baseURL string, apiKey string, username string, password string) (c *Client) {
+func NewClient(baseURL string, apiKey string, username string, password string, SkipVerify bool) (c *Client) {
 	// Grafana doesn't support double slashes in the API routes, so we strip the
 	// last slash if there's one, because request() will append one anyway.
 	if strings.HasSuffix(baseURL, "/") {
 		baseURL = baseURL[:len(baseURL)-1]
+	}
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: SkipVerify},
 	}
 
 	return &Client{
@@ -34,7 +40,7 @@ func NewClient(baseURL string, apiKey string, username string, password string) 
 		APIKey:     apiKey,
 		Username:   username,
 		Password:   password,
-		httpClient: new(http.Client),
+		httpClient: &http.Client{Transport: tr},
 	}
 }
 

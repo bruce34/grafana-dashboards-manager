@@ -32,6 +32,7 @@ type GrafanaSettings struct {
 	Username     string `yaml:"username"`
 	Password     string `"yaml:password"`
 	IgnorePrefix string `yaml:"ignore_prefix,omitempty"`
+	SkipVerify   bool   `default:"false" yaml:"insecureSkipVerify"`
 }
 
 // SimpleSyncSettings contains minimal data on the synchronisation process. It is

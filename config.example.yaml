@@ -12,7 +12,8 @@ grafana:
     # ignored by both the puller and the pusher. This setting is
     # case-insensitive and optional.
     ignore_prefix: test
-
+    # Disables SSL certs check. Debug only! DEFAULT: false
+    # insecureSkipVerify: false
 
 # Settings to interact with the Git repository. Currently only SSH repos are
 # supported.
