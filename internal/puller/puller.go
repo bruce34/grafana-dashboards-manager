@@ -89,7 +89,7 @@ func PullGrafanaAndCommit(client *grafana.Client, cfg *config.Config) (err error
 
 	syncPath := SyncPath(cfg)
 	// Only do Git stuff if there's a configuration for that. On "simple sync"
-	// mode, we don't need do do any versioning.
+	// mode, we don't need to do any versioning.
 	// We need to set syncPath accordingly, though, because we use it later.
 	if cfg.Git != nil {
 		// Clone or pull the repo

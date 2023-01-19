@@ -18,8 +18,15 @@ grafana:
 # Settings to interact with the Git repository. Currently only SSH repos are
 # supported.
 git:
+    # Two types of URL supported: SSH and HTTP. 
+    # When SSH authorization is required also 'private_key' should be provided
+    # When HTTP authorization is required also 'token' should be provided. 
+    #
     # SSH URL to the repository. The user part (usually "git@" at the beginning
     # of the URL) must be excluded.
+    #
+    # url: http://git.company.ltd/grafana-dashboards.git
+    # or
     url: "git.company.tld:it/grafana-dashboards.git"
     # SSH user that can pull and push from and to the git repository. Usually
     # it's just "git".
@@ -46,6 +53,9 @@ git:
     # Should changes made by a manager (this program) be applied.
     # Set to true if using in sync mode
     apply_manager_commits: true
+    # token: <GITLAB TOKEN>
+    # More info about tokens:
+    # https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html
 
 
 # An alternative to Git synchronisation is the "simple sync" mode. This will

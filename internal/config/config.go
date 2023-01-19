@@ -54,6 +54,7 @@ type GitSettings struct {
 	DontCommit          bool                `yaml:"dont_commit"`
 	VersionsFilePrefix  string              `yaml:"versions_file_prefix"`
 	ApplyManagerCommits bool                `yaml:"apply_manager_commits"`
+	Token               string              `yaml:"token"`
 }
 
 // CommitsAuthorConfig contains the configuration (name + email address) to use

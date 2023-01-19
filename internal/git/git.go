@@ -2,9 +2,10 @@ package git
 
 import (
 	"fmt"
-	"gopkg.in/src-d/go-git.v4/plumbing/storer"
 	"io/ioutil"
 	"os"
+
+	"gopkg.in/src-d/go-git.v4/plumbing/storer"
 
 	"github.com/bruce34/grafana-dashboards-manager/internal/config"
 
@@ -13,7 +14,8 @@ import (
 	gogit "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport"
+	transport "gopkg.in/src-d/go-git.v4/plumbing/transport"
+	githttp "gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 	gitssh "gopkg.in/src-d/go-git.v4/plumbing/transport/ssh"
 )
 
@@ -23,7 +25,7 @@ import (
 type Repository struct {
 	Repo *gogit.Repository
 	cfg  *config.GitSettings
-	auth *gitssh.PublicKeys
+	auth transport.AuthMethod
 }
 
 // NewRepository creates a new instance of the Repository structure and fills
@@ -283,19 +285,30 @@ func (r *Repository) GetFilesContentsAtCommit(commit *object.Commit) (map[string
 // Returns an error if there was an issue reading the private key file or
 // parsing it.
 func (r *Repository) getAuth() error {
-	// Load the private key.
-	privateKey, err := ioutil.ReadFile(r.cfg.PrivateKeyPath)
-	if err != nil {
-		return err
-	}
 
-	// Parse the private key.
-	signer, err := ssh.ParsePrivateKey(privateKey)
-	if err != nil {
-		return err
-	}
+	if r.cfg.URL[0:4] == "http" {
+		logrus.WithFields(logrus.Fields{
+			"URL": r.cfg.URL,
+		}).Info("http[s] link found")
+		r.auth = &githttp.BasicAuth{Username: "PRIVATE-TOKEN", Password: r.cfg.Token}
+	} else {
+		logrus.WithFields(logrus.Fields{
+			"URL": r.cfg.URL,
+		}).Info("ssh link found")
+		// Load the private key.
+		privateKey, err := ioutil.ReadFile(r.cfg.PrivateKeyPath)
+		if err != nil {
+			return err
+		}
 
-	r.auth = &gitssh.PublicKeys{User: r.cfg.User, Signer: signer}
+		// Parse the private key.
+		signer, err := ssh.ParsePrivateKey(privateKey)
+		if err != nil {
+			return err
+		}
+
+		r.auth = &gitssh.PublicKeys{User: r.cfg.User, Signer: signer}
+	}
 	return nil
 }
 
@@ -373,13 +386,10 @@ func checkRemoteErrors(err error, logFields logrus.Fields) error {
 	switch err {
 	case gogit.NoErrAlreadyUpToDate:
 		nonError = true
-		break
 	case transport.ErrEmptyRemoteRepository:
 		nonError = true
-		break
 	default:
 		nonError = false
-		break
 	}
 
 	// Log non-error.

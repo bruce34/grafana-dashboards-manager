@@ -3,12 +3,12 @@ package puller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bruce34/grafana-dashboards-manager/internal/grafana"
 	"io/ioutil"
 	"os"
 	"time"
 
 	"github.com/bruce34/grafana-dashboards-manager/internal/config"
+	"github.com/bruce34/grafana-dashboards-manager/internal/grafana"
 
 	gogit "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -76,17 +76,6 @@ func writeVersions(versions grafana.VersionFile, dv map[string]diffVersion, clon
 
 	filename := clonePath + "/" + getVersionsFile(versionsFile)
 	return rewriteFile(filename, indentedJSON)
-}
-
-func createFoldersFromMetaData(foldersMetaByUID map[string]grafana.DbSearchResponse) (folders map[string]grafana.Folder) {
-	folders = make(map[string]grafana.Folder, 0)
-	for _, folder := range foldersMetaByUID {
-		folders[folder.UID] = grafana.Folder{
-			Title: folder.Title,
-			UID:   folder.UID,
-		}
-	}
-	return
 }
 
 // commitNewVersions creates a git commit from updated dashboard files (that
