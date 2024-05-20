@@ -30,6 +30,8 @@ git:
     url: "git.company.tld:it/grafana-dashboards.git"
     # SSH user that can pull and push from and to the git repository. Usually
     # it's just "git".
+    # If you are using Gitlab git server over web, you should set this field to "PRIVATE-TOKEN"
+    # If you are using Gogs git server over web, you shoud paste token to this field, not to "token"
     user: git
     # Path to the private key used to authenticate on Git. It is recommended to
     # use a passphraseless key.
@@ -53,8 +55,12 @@ git:
     # Should changes made by a manager (this program) be applied.
     # Set to true if using in sync mode
     apply_manager_commits: true
-    # token: <GITLAB TOKEN>
-    # More info about tokens:
+
+    # If you are using Gitlab git server, please specify here Gitlab authorizing token.
+    # If you are using Gogs git server, please set this field to "git", or leave empty
+    # To work with other git servers please refer to the appropriate documantations
+    # token: "<GITLAB TOKEN>"
+    # More info about tokens in Gitlab:
     # https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html
 
 

@@ -290,7 +290,7 @@ func (r *Repository) getAuth() error {
 		logrus.WithFields(logrus.Fields{
 			"URL": r.cfg.URL,
 		}).Info("http[s] link found")
-		r.auth = &githttp.BasicAuth{Username: "PRIVATE-TOKEN", Password: r.cfg.Token}
+		r.auth = &githttp.BasicAuth{Username: r.cfg.User, Password: r.cfg.Token}
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"URL": r.cfg.URL,
